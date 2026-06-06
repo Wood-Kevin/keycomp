@@ -1,16 +1,16 @@
 import os
-import anthropic
+from groq import Groq
 
 _client = None
 
 
-def _get_client() -> anthropic.Anthropic:
+def _get_client() -> Groq:
     global _client
     if _client is None:
-        api_key = os.getenv("ANTHROPIC_API_KEY")
+        api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
-            raise ValueError("ANTHROPIC_API_KEY is not set")
-        _client = anthropic.Anthropic(api_key=api_key)
+            raise ValueError("GROQ_API_KEY is not set")
+        _client = Groq(api_key=api_key)
     return _client
 
 
@@ -81,11 +81,13 @@ def analyze_party(characters_data: list[dict]) -> str:
         "and one dungeon from the current pool to start with based on "
         "their recent runs and comp strengths."
     )
-    response = _get_client().messages.create(
-        model="claude-sonnet-4-6",
+    response = _get_client().chat.completions.create(
+        model="llama-3.3-70b-versatile",
         max_tokens=1024,
-        system=_SYSTEM,
-        messages=[{"role": "user", "content": prompt}],
+        messages=[
+            {"role": "system", "content": _SYSTEM},
+            {"role": "user", "content": prompt},
+        ],
     )
 
-    return response.content[0].text
+    return response.choices[0].message.content

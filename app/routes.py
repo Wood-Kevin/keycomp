@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, render_template, request
 import requests as http_requests
-import anthropic
+import groq
 from app.services.raiderio import get_character
 from app.services.analyzer import analyze_party
 
@@ -48,7 +48,7 @@ def analyze():
 
     try:
         analysis = analyze_party(results)
-    except (anthropic.APIError, ValueError) as e:
+    except (groq.GroqError, ValueError) as e:
         return jsonify({"error": f"Analysis failed: {str(e)}"}), 502
 
     return jsonify({"characters": results, "analysis": analysis})
