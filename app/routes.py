@@ -14,7 +14,7 @@ def index():
 
 @bp.route("/health")
 def health():
-    return jsonify({"status": "ok"})
+    return {"status": "ok"}, 200
 
 
 @bp.route("/analyze", methods=["POST"])

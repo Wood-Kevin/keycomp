@@ -12,4 +12,4 @@ ENV FLASK_RUN_HOST=0.0.0.0
 
 EXPOSE 5000
 
-CMD gunicorn --bind 0.0.0.0:$PORT "app:create_app()"
+CMD gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 "app:create_app()"
